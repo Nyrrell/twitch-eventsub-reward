@@ -1,0 +1,128 @@
+body {
+  font-family: monospace;
+}
+
+#redemption {
+  min-width: 300px;
+  display: none;
+  transition: opacity .3s ease-out;
+  opacity: 0;
+}
+
+#redemption.active {
+  display: block;
+  opacity: 1;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2em 1em;
+}
+
+.text {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+#curseCounter:not(:empty):before {
+  content: '👹';
+  padding-right: 12px;
+  transform: scale(0.8);
+  display: inline-block;
+}
+
+#blessCounter:not(:empty):after {
+  content: '🙏';
+  padding-left: 12px;
+  transform: scale(0.8);
+  display: inline-block;
+}
+
+.progressBar[hidden] {
+  display: none;
+}
+
+.progressBar {
+  height: max-content;
+  border-radius: 10px;
+  box-shadow: 0px 5px 10px -6px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.progressBar div:nth-child(odd) {
+  background: #003f5c;
+}
+
+.progressBar div:nth-child(even) {
+  background: #ffa600;
+}
+
+div:has(> pre) {
+  background: lightgray;
+  border: 1px solid slategrey;
+  border-radius: 0.2em;
+  width: max-content;
+}
+
+pre {
+  padding: 1em;
+  margin: 0;
+  filter: blur(3px);
+  cursor: pointer;
+}
+
+pre.show:hover {
+  filter: blur(0);
+  cursor: inherit;
+}
+
+
+.loader {
+  --main-color: gray;
+  margin: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--main-color);
+  box-shadow: 32px 0 var(--main-color), -32px 0 var(--main-color);
+  position: relative;
+  animation: flash 0.8s ease-out infinite alternate;
+}
+
+.loader.error {
+  --main-color: lightcoral;
+  animation: flash 2s ease-out infinite alternate;
+}
+
+@keyframes flash {
+  0% {
+    background-color: lightgray;
+    box-shadow: 32px 0 lightgray, -32px 0 var(--main-color);
+  }
+  50% {
+    background-color: var(--main-color);
+    box-shadow: 32px 0 lightgray, -32px 0 lightgray;
+  }
+  100% {
+    background-color: lightgray;
+    box-shadow: 32px 0 var(--main-color), -32px 0 lightgray;
+  }
+}
+
+.debug {
+  position: fixed;
+  bottom: 10px;
+}
+
+.debug:not(:empty):before {
+  content: 'debug :';
+}
+
+summary {
+  cursor: pointer;
+}
