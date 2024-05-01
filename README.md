@@ -29,7 +29,7 @@ Une fois connecté, dans `Applications` > `Enregistrer votre application`, rempl
     - Pour cette application, nous n'utilisons pas de serveur, mais une URL doit être saisie.
 - <b>Catégorie</b> : `Broadcaster Suite`
 - <b>Type de client</b> : `Publique`
-    - <i style="color: red;">Attention, il n'est plus possible de changer ce paramètre après la création de
+    - <i style="color : red">Attention, il n'est plus possible de changer ce paramètre après la création de
       l'application.</i>
     - Si vous ne choisissez pas "Publique", comme nous n'utilisons pas de serveur, nous ne
       pourrons pas actualiser le token fourni par Twitch pour effectuer nos requêtes à l'API.
@@ -114,7 +114,29 @@ Si l'application n'a pas réussi à se connecter, elle affiche 3 points de coule
 Pour obtenir plus d'informations sur la raison de cet échec, dans le fichier `config.js`, mettez le paramètre `debug`
 à `true` et rechargez la page.
 
-## Comment mettre à jour ?
+## Comment réinitialiser le compteur ?
+
+Pour remettre le compteur à zéro, la première possibilité est d'actualiser la page web dans OBS. L'inconvénient de cette
+méthode est que vous serez déconnecté du websocket et il faudra que l'application établisse une nouvelle connexion au
+websocket.
+
+La deuxième possibilité est d'ajouter dans OBS une seconde source de navigateur et de choisir le
+fichier `trigger-reset.html`. Cette source n'a rien à afficher ; on va seulement se servir du rafraîchissement de cette
+page pour émettre un message à notre compteur, lui indiquant qu'il doit se remettre à zéro.  
+L'avantage majeur de cette solution est que l'on garde notre session websocket ouverte et à l'écoute.
+
+Pour ce faire, dans les propriétés de la source du navigateur, il faut cocher cette case :
+
+![obs-desac-source](media/obs/desac-source.png)
+
+Ensuite, dans les paramètres d'OBS, dans l'onglet `Raccourcis clavier`, ajoutez le raccourci clavier de votre choix pour
+afficher et cacher la source de votre navigateur, ou utilisez votre Stream Deck si vous en avez un.
+
+![obs-shortcut-source](media/obs/shortcut-source.png)
+
+Le compteur sera remis à zéro lorsque vous cacherez ou afficherez la source.
+
+## Comment mettre à jour l'application ?
 
 Téléchargez les sources de la
 dernière [version (Release)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest) disponible.  
