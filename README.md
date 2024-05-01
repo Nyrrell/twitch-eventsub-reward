@@ -116,16 +116,16 @@ Pour obtenir plus d'informations sur la raison de cet échec, dans le fichier `c
 
 ## Comment réinitialiser le compteur ?
 
-Pour remettre le compteur à zéro, la première possibilité est d'actualiser la page web dans OBS. L'inconvénient de cette
+Pour remettre le compteur à zéro, la première possibilité est d'actualiser la page web `index.html` dans OBS. L'inconvénient de cette
 méthode est que vous serez déconnecté du websocket et il faudra que l'application établisse une nouvelle connexion au
-websocket.
+serveur Twitch.
 
 La deuxième possibilité est d'ajouter dans OBS une seconde source de navigateur et de choisir le
-fichier `trigger-reset.html`. Cette source n'a rien à afficher ; on va seulement se servir du rafraîchissement de cette
+fichier `trigger-reset.html`. Cette source n'a rien à afficher, on va seulement se servir du rafraîchissement de cette
 page pour émettre un message à notre compteur, lui indiquant qu'il doit se remettre à zéro.  
 L'avantage majeur de cette solution est que l'on garde notre session websocket ouverte et à l'écoute.
 
-Pour ce faire, dans les propriétés de la source du navigateur, il faut cocher cette case :
+Dans les propriétés de la source du navigateur du fichier `trigger-reset.html`, il faut cocher cette case :
 
 ![obs-desac-source](media/obs/desac-source.png)
 
@@ -134,7 +134,7 @@ afficher et cacher la source de votre navigateur, ou utilisez votre Stream Deck 
 
 ![obs-shortcut-source](media/obs/shortcut-source.png)
 
-Le compteur sera remis à zéro lorsque vous cacherez ou afficherez la source.
+La source contenant la page `trigger-reset.html` permettra de remettre le compteur à zéro dès que vous la masquerez ou l'afficherez.
 
 ## Comment mettre à jour l'application ?
 
