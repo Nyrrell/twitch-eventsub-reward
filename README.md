@@ -29,8 +29,8 @@ Une fois connecté, dans `Applications` > `Enregistrer votre application`, rempl
     - Pour cette application, nous n'utilisons pas de serveur, mais une URL doit être saisie.
 - <b>Catégorie</b> : `Broadcaster Suite`
 - <b>Type de client</b> : `Publique`
-    - <span style="color: crimson;">Attention, il n'est plus possible de changer ce paramètre après la création de
-      l'application.</span>
+    - <i style="color: red;">Attention, il n'est plus possible de changer ce paramètre après la création de
+      l'application.</i>
     - Si vous ne choisissez pas "Publique", comme nous n'utilisons pas de serveur, nous ne
       pourrons pas actualiser le token fourni par Twitch pour effectuer nos requêtes à l'API.
 
@@ -99,6 +99,20 @@ utilisés par l'application pour s'authentifier auprès de Twitch.
 Pas de panique si vous effectuez une nouvelle initialisation, le `DEVICE_CODE` changera. L'application saura qu'elle ne
 doit pas utiliser le stockage du navigateur et utilisera à nouveau le contenu du fichier de configuration pour mettre à
 jour celui du stockage local du navigateur.
+
+## Indicateur de connexion
+
+Lorsque l'application est en train de se connecter à Twitch, elle affiche 3 points clignotants rapidement pour indiquer
+cet état :
+
+![loading](media/loading.gif)
+
+Si l'application n'a pas réussi à se connecter, elle affiche 3 points de couleur rouge clignotant lentement :
+
+![loading-error](media/loading-error.gif)
+
+Pour obtenir plus d'informations sur la raison de cet échec, dans le fichier `config.js`, mettez le paramètre `debug`
+à `true` et rechargez la page.
 
 ## Comment mettre à jour ?
 
