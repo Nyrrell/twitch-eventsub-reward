@@ -34,14 +34,14 @@ const twitch = {
         "client_id": config.CLIENT_ID,
         "scopes": config.SCOPES,
       })
-    }).then(twitch.handleResponse);
+    }).then(handleResponse);
   },
   validateToken: async () => {
     return fetch(`${twitch.OAUTH}/validate`, {
       "headers": {
         "Authorization": `OAuth ${config.ACCESS_TOKEN}`,
       },
-    }).then(twitch.handleResponse)
+    }).then(handleResponse)
       .catch(() => false);
   },
   getToken: async () => {
@@ -53,7 +53,7 @@ const twitch = {
         'device_code': config.DEVICE_CODE,
         'grant_type': 'urn:ietf:params:oauth:grant-type:device_code'
       })
-    }).then(twitch.handleResponse);
+    }).then(handleResponse);
   },
   refreshToken: async () => {
     return fetch(`${(twitch.OAUTH)}/token`, {
@@ -63,7 +63,8 @@ const twitch = {
         'refresh_token': config.REFRESH_TOKEN,
         'client_id': config.CLIENT_ID
       })
-    }).then(twitch.handleResponse);
+    }).then(handleResponse)
+      .then(saveConfig);
   },
   subscribe: async (sessionId) => {
     return fetch(`${twitch.API}/eventsub/subscriptions`, {
@@ -84,9 +85,9 @@ const twitch = {
           "session_id": sessionId
         }
       })
-    }).then(twitch.handleResponse)
-      .then(value => {
-        if (value) {
+    }).then(handleResponse)
+      .then(data => {
+        if (data) {
           document.querySelector('.loader').setAttribute('hidden', 'true');
           document.querySelector('#redemption').removeAttribute('hidden');
         }
@@ -100,7 +101,7 @@ const twitch = {
         Authorization: "Bearer " + config.ACCESS_TOKEN,
         "Client-Id": config.CLIENT_ID,
       }
-    }).then(twitch.handleResponse)
+    }).then(handleResponse)
       .then(data => {
         config.BROADCASTER_ID = data['data'][0]['id'];
         document.getElementById('twitchId').innerHTML = `Twitch ID : ${data['data'][0]['id']}`;
@@ -113,7 +114,7 @@ const twitch = {
         Authorization: "Bearer " + config.ACCESS_TOKEN,
         "Client-Id": config.CLIENT_ID,
       }
-    }).then(twitch.handleResponse)
+    }).then(handleResponse)
       .then(({ data }) => {
         const dl = document.getElementById('twitchCustomReward');
         dl.replaceChildren();
@@ -123,37 +124,50 @@ const twitch = {
           dl.appendChild(li);
         })
       })
-  },
-  handleResponse: (response) => {
-    return response.text().then(text => {
-      const data = text && JSON.parse(text.toString());
-
-      if (response.status === 401 && data?.['message'] === "invalid access token") {
-        return twitch.refreshToken();
-      }
-
-      if (!response.ok && data?.message !== 'authorization_pending') {
-        const error = data?.['message'] || response.statusText;
-        handleError(error);
-        return Promise.reject(error);
-      }
-      return data;
-    }).catch(reason => {
-      handleError(reason);
-      return false;
-    });
   }
 };
 
+const handleResponse = (response) => {
+  return response.text().then(text => {
+    const data = text && JSON.parse(text.toString());
+
+    if (response.status === 401 && data?.['message'] === "invalid access token") {
+      return twitch.refreshToken();
+    }
+
+    if (!response.ok && data?.message !== 'authorization_pending') {
+      const error = data?.['message'] || response.statusText;
+      return Promise.reject(error);
+    }
+
+    return data;
+  }).catch(reason => {
+    handleError(reason);
+    return false;
+  });
+}
+
 const handleError = (error) => {
   console.log(error);
-  const debug = document.querySelector('.debug');
+  const debug = document.querySelector('#log');
   document.querySelector('.loader').classList.add('error');
-  debug.innerHTML = `<p>${error}</p>`;
+  debug.innerHTML = `<p>Erreur : ${error}</p>`;
   debug.innerHTML += `<details>
       <summary>CONFIG DU NAVIGATEUR</summary>
       <div><pre class="show">${JSON.stringify(config, null, 2)}</pre></div>
     </details>`;
+}
+
+const saveConfig = (payload) => {
+  if (!payload['access_token']) {
+    return false;
+  }
+
+  config.ACCESS_TOKEN = payload['access_token'];
+  config.REFRESH_TOKEN = payload['refresh_token'];
+  config.INIT = false;
+  localStorage.setItem('config', JSON.stringify(config));
+  return true;
 }
 
 const init = async () => {
@@ -189,14 +203,9 @@ const init = async () => {
 
     const payload = await twitch.getToken();
 
-    if (!payload?.['access_token']) {
+    if (!saveConfig(payload)) {
       return;
     }
-
-    config.ACCESS_TOKEN = payload['access_token'];
-    config.REFRESH_TOKEN = payload['refresh_token'];
-    config.INIT = false;
-    localStorage.setItem('config', JSON.stringify(config));
 
     document.body.removeChild(divDevice)
     const divConfig = document.createElement('div');
@@ -227,8 +236,8 @@ const init = async () => {
   }, (payload['interval'] * 1000));
 }
 
-const connectSocket = () => {
-  const ws = new WebSocket(twitch.WEBSOCKET);
+const connectSocket = (reconnect) => {
+  let ws = new WebSocket(twitch.WEBSOCKET);
 
   ws.onmessage = ({ data }) => {
     const { metadata: { message_type }, payload } = JSON.parse(data);
@@ -237,10 +246,13 @@ const connectSocket = () => {
       case "session_keepalive" :
         break;
       case "session_welcome" :
+        if (reconnect) {
+          break;
+        }
         console.log("EventSub subscription")
         return twitch.subscribe(payload['session']['id']);
       case "notification" :
-        const { event: { reward }} = payload;
+        const { event: { reward } } = payload;
         if (reward['id'] === config.CURSE_REWARD) {
           return redemption.addCurse();
         }
@@ -248,6 +260,9 @@ const connectSocket = () => {
           return redemption.addBless();
         }
         return console.log(payload);
+      case "session_reconnect" :
+        twitch.WEBSOCKET = payload['session']['reconnect_url'];
+        return connectSocket(true);
       default :
         return console.log("message_type :", message_type, "payload :", payload);
     }
@@ -259,14 +274,14 @@ const connectSocket = () => {
 
   ws.onclose = function (event) {
     if (event.wasClean) {
-      handleError(`Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+      console.log(`Connection closed cleanly, code=${event.code} reason=${event.reason}`);
     } else {
-      handleError('Connection died');
+      console.log('Connection died');
     }
   };
 }
 
-window.onload = async () => {
+const main = async () => {
   if (config.DEBUG) {
     document.querySelector('.debug').removeAttribute('hidden');
   }
@@ -283,5 +298,7 @@ window.onload = async () => {
   if (!await twitch.validateToken()) {
     return document.querySelector('.loader').classList.add('error');
   }
-  return connectSocket();
+  return connectSocket(false);
 }
+
+window.onload = main;
