@@ -90,7 +90,34 @@ const twitch = {
         if (data) {
           document.querySelector('.loader').setAttribute('hidden', 'true');
           document.querySelector('#redemption').removeAttribute('hidden');
+          if (data.total > 1) {
+            return twitch.getSubscription();
+          }
         }
+      })
+  },
+  unsubscribe: (id) => {
+    return fetch(`${twitch.API}/eventsub/subscriptions?id=${encodeURI(id)}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: "Bearer " + config.ACCESS_TOKEN,
+        "Client-Id": config.CLIENT_ID
+      },
+    })
+  },
+  getSubscription: () => {
+    return fetch(`${twitch.API}/eventsub/subscriptions`, {
+      headers: {
+        Authorization: "Bearer " + config.ACCESS_TOKEN,
+        "Client-Id": config.CLIENT_ID
+      },
+    }).then(handleResponse)
+      .then(({ data }) => {
+        data.forEach(sub => {
+          if (sub.status !== 'enabled') {
+            return twitch.unsubscribe(sub.id);
+          }
+        })
       })
   },
   getBroadcasterId: async () => {
