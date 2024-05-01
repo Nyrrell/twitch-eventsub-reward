@@ -2,6 +2,7 @@ const redemption = {
   curse: 0,
   bless: 0,
   total: 0,
+  broadcast: new BroadcastChannel('redemption'),
   addCurse: () => {
     redemption.curse++;
     redemption.total++;
@@ -20,6 +21,15 @@ const redemption = {
     document.querySelector(".progressBar").firstElementChild.style.width = percentCurse + "%";
     document.querySelector(".progressBar").lastElementChild.style.width = percentBless + "%";
     document.getElementById("redemption").classList.add("active");
+  },
+  resetPoints: () => {
+    redemption.curse = 0;
+    redemption.bless = 0;
+    redemption.total = 0;
+    document.getElementById("curseCounter").innerHTML = `<span>${redemption.curse}</span>`;
+    document.getElementById("blessCounter").innerHTML = `<span>${redemption.bless}</span>`;
+    document.querySelector(".progressBar").firstElementChild.style.width = "50%";
+    document.querySelector(".progressBar").lastElementChild.style.width = "50%";
   }
 }
 
@@ -34,14 +44,14 @@ const twitch = {
         "client_id": config.CLIENT_ID,
         "scopes": config.SCOPES,
       })
-    }).then(handleResponse);
+    }).then(helpers.handleResponse);
   },
   validateToken: async () => {
     return fetch(`${twitch.OAUTH}/validate`, {
       "headers": {
         "Authorization": `OAuth ${config.ACCESS_TOKEN}`,
       },
-    }).then(handleResponse)
+    }).then(helpers.handleResponse)
       .catch(() => false);
   },
   getToken: async () => {
@@ -53,7 +63,7 @@ const twitch = {
         'device_code': config.DEVICE_CODE,
         'grant_type': 'urn:ietf:params:oauth:grant-type:device_code'
       })
-    }).then(handleResponse);
+    }).then(helpers.handleResponse);
   },
   refreshToken: async () => {
     return fetch(`${(twitch.OAUTH)}/token`, {
@@ -63,8 +73,8 @@ const twitch = {
         'refresh_token': config.REFRESH_TOKEN,
         'client_id': config.CLIENT_ID
       })
-    }).then(handleResponse)
-      .then(saveConfig);
+    }).then(helpers.handleResponse)
+      .then(helpers.saveConfig);
   },
   subscribe: async (sessionId) => {
     return fetch(`${twitch.API}/eventsub/subscriptions`, {
@@ -85,7 +95,7 @@ const twitch = {
           "session_id": sessionId
         }
       })
-    }).then(handleResponse)
+    }).then(helpers.handleResponse)
       .then(data => {
         if (data) {
           document.querySelector('.loader').setAttribute('hidden', 'true');
@@ -111,7 +121,7 @@ const twitch = {
         Authorization: "Bearer " + config.ACCESS_TOKEN,
         "Client-Id": config.CLIENT_ID
       },
-    }).then(handleResponse)
+    }).then(helpers.handleResponse)
       .then(({ data }) => {
         data.forEach(sub => {
           if (sub.status !== 'enabled') {
@@ -128,7 +138,7 @@ const twitch = {
         Authorization: "Bearer " + config.ACCESS_TOKEN,
         "Client-Id": config.CLIENT_ID,
       }
-    }).then(handleResponse)
+    }).then(helpers.handleResponse)
       .then(data => {
         config.BROADCASTER_ID = data['data'][0]['id'];
         document.getElementById('twitchId').innerHTML = `Twitch ID : ${data['data'][0]['id']}`;
@@ -141,7 +151,7 @@ const twitch = {
         Authorization: "Bearer " + config.ACCESS_TOKEN,
         "Client-Id": config.CLIENT_ID,
       }
-    }).then(handleResponse)
+    }).then(helpers.handleResponse)
       .then(({ data }) => {
         const dl = document.getElementById('twitchCustomReward');
         dl.replaceChildren();
@@ -154,47 +164,47 @@ const twitch = {
   }
 };
 
-const handleResponse = (response) => {
-  return response.text().then(text => {
-    const data = text && JSON.parse(text.toString());
+const helpers = {
+  handleResponse: (response) => {
+    return response.text().then(text => {
+      const data = text && JSON.parse(text.toString());
 
-    if (response.status === 401 && data?.['message'] === "invalid access token") {
-      return twitch.refreshToken();
-    }
+      if (response.status === 401 && data?.['message'] === "invalid access token") {
+        return twitch.refreshToken();
+      }
 
-    if (!response.ok && data?.message !== 'authorization_pending') {
-      const error = data?.['message'] || response.statusText;
-      return Promise.reject(error);
-    }
+      if (!response.ok && data?.message !== 'authorization_pending') {
+        const error = data?.['message'] || response.statusText;
+        return Promise.reject(error);
+      }
 
-    return data;
-  }).catch(reason => {
-    handleError(reason);
-    return false;
-  });
-}
-
-const handleError = (error) => {
-  console.log(error);
-  const debug = document.querySelector('#log');
-  document.querySelector('.loader').classList.add('error');
-  debug.innerHTML = `<p>Erreur : ${error}</p>`;
-  debug.innerHTML += `<details>
+      return data;
+    }).catch(reason => {
+      helpers.handleError(reason);
+      return false;
+    });
+  },
+  handleError: (error) => {
+    console.log(error);
+    const debug = document.querySelector('#log');
+    document.querySelector('.loader').classList.add('error');
+    debug.innerHTML = `<p>Erreur : ${error}</p>`;
+    debug.innerHTML += `<details>
       <summary>CONFIG DU NAVIGATEUR</summary>
       <div><pre class="show">${JSON.stringify(config, null, 2)}</pre></div>
     </details>`;
-}
+  },
+  saveConfig: (payload) => {
+    if (!payload['access_token']) {
+      return false;
+    }
 
-const saveConfig = (payload) => {
-  if (!payload['access_token']) {
-    return false;
+    config.ACCESS_TOKEN = payload['access_token'];
+    config.REFRESH_TOKEN = payload['refresh_token'];
+    config.INIT = false;
+    localStorage.setItem('config', JSON.stringify(config));
+    return true;
   }
-
-  config.ACCESS_TOKEN = payload['access_token'];
-  config.REFRESH_TOKEN = payload['refresh_token'];
-  config.INIT = false;
-  localStorage.setItem('config', JSON.stringify(config));
-  return true;
 }
 
 const init = async () => {
@@ -230,7 +240,7 @@ const init = async () => {
 
     const payload = await twitch.getToken();
 
-    if (!saveConfig(payload)) {
+    if (!helpers.saveConfig(payload)) {
       return;
     }
 
@@ -296,7 +306,7 @@ const connectSocket = (reconnect) => {
   }
 
   ws.onerror = function (error) {
-    handleError(error);
+    helpers.handleError(error);
   };
 
   ws.onclose = function (event) {
@@ -325,7 +335,7 @@ const main = async () => {
   if (!await twitch.validateToken()) {
     return document.querySelector('.loader').classList.add('error');
   }
+
+  redemption.broadcast.onmessage = redemption.resetPoints;
   return connectSocket(false);
 }
-
-window.onload = main;

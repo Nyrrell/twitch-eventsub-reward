@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trigger de reset</title>
+  <script src='main.js'></script>
+  <script>
+    window.onload = () => redemption.broadcast.postMessage("reset");
+    window.onbeforeunload = () => redemption.broadcast.postMessage("reset");
+  </script>
+</head>
+<body>
+</body>
+</html>

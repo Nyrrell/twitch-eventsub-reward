@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <title>Twitch websocket (EventSub) custom reward listener</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="style.css">
   <script src='../config.js'></script>
   <script src='main.js'></script>
+  <script>
+    window.onload = main;
+  </script>
 </head>
 <body>
 <div class="loader"></div>
@@ -22,6 +26,7 @@
   <div>
     <button onclick="redemption.addCurse()">TEST CURSE</button>
     <button onclick="redemption.addBless()">TEST BLESS</button>
+    <button onclick="redemption.resetPoints()">RESET</button>
   </div>
   <div id="log"></div>
 </div>
