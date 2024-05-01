@@ -5,19 +5,20 @@ const redemption = {
   addCurse: () => {
     redemption.curse++;
     redemption.total++;
+    document.getElementById("curseCounter").innerHTML = `<span>${redemption.curse}</span>`;
     redemption.updatePoints();
   },
   addBless: () => {
     redemption.bless++;
     redemption.total++;
+    document.getElementById("blessCounter").innerHTML = `<span>${redemption.bless}</span>`;
     redemption.updatePoints();
   },
   updatePoints: () => {
     const percentCurse = (redemption.curse / redemption.total) * 100;
     const percentBless = (redemption.bless / redemption.total) * 100;
-    document.getElementById("curseCounter").innerText = redemption.curse ? redemption.curse : "";
-    document.getElementById("blessCounter").innerText = redemption.bless ? redemption.bless : "";
-    document.querySelector(".progressBar").style.gridTemplateColumns = percentCurse + "% " + percentBless + "%";
+    document.querySelector(".progressBar").firstElementChild.style.width = percentCurse + "%";
+    document.querySelector(".progressBar").lastElementChild.style.width = percentBless + "%";
     document.getElementById("redemption").classList.add("active");
   }
 }
@@ -87,6 +88,7 @@ const twitch = {
       .then(value => {
         if (value) {
           document.querySelector('.loader').setAttribute('hidden', 'true');
+          document.querySelector('#redemption').removeAttribute('hidden');
         }
       })
   },
@@ -265,6 +267,10 @@ const connectSocket = () => {
 }
 
 window.onload = async () => {
+  if (config.DEBUG) {
+    document.querySelector('.debug').removeAttribute('hidden');
+  }
+
   if (config.INIT) {
     return init();
   }

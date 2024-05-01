@@ -1,57 +1,71 @@
 body {
   font-family: monospace;
+  margin-bottom: 20vh;
 }
 
 #redemption {
   min-width: 300px;
-  display: none;
-  transition: opacity .3s ease-out;
+  transition: opacity .6s ease-out;
   opacity: 0;
 }
 
 #redemption.active {
-  display: block;
   opacity: 1;
 }
 
-.container {
+.counterContainer {
   display: flex;
   justify-content: space-between;
   padding: 0.2em 1em;
 }
 
-.text {
+.number {
   color: white;
   font-size: 2rem;
   font-weight: bold;
   user-select: none;
 }
 
-#curseCounter:not(:empty):before {
-  content: '👹';
-  padding-right: 12px;
+.number > span {
+  animation: fade 2s forwards;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.counterContainer div:before,
+.counterContainer div:after {
+  padding: 0 12px;
   transform: scale(0.8);
   display: inline-block;
+}
+
+#curseCounter:not(:empty):before {
+  content: '💀';
 }
 
 #blessCounter:not(:empty):after {
   content: '🙏';
-  padding-left: 12px;
-  transform: scale(0.8);
-  display: inline-block;
-}
-
-.progressBar[hidden] {
-  display: none;
 }
 
 .progressBar {
   height: max-content;
   border-radius: 10px;
-  box-shadow: 0px 5px 10px -6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  display: grid;
+  display: flex;
   grid-template-columns: 50% 50%;
+}
+
+.progressBar div {
+  width: 50%;
+  transition: width ease-in-out .8s;
 }
 
 .progressBar div:nth-child(odd) {
@@ -119,8 +133,10 @@ pre.show:hover {
   bottom: 10px;
 }
 
-.debug:not(:empty):before {
+.debug:before {
   content: 'debug :';
+  position: relative;
+  top: -1em;
 }
 
 summary {
