@@ -136,6 +136,29 @@ afficher et cacher la source de votre navigateur, ou utilisez votre Stream Deck 
 
 La source contenant la page `trigger-reset.html` permettra de remettre le compteur à zéro dès que vous la masquerez ou l'afficherez.
 
+## Customisation du style dans OBS
+
+Il est possible de personnaliser le style de notre compteur de récompenses en modifiant les valeurs des variables existantes. Dans OBS, dans les propriétés de la source du navigateur pour notre fichier `index.html`, vous pouvez ajouter le CSS suivant à la section `CSS personnalisé` en plus du CSS déjà présent :
+
+```css
+:root {
+  --orderBar: column;
+  --curseEmoji: '💀';
+  --blessEmoji: '🙏';
+  --curseBarColor: rgba(0, 63, 92, 0.9);
+  --blessBarColor: rgba(255, 166, 0, 0.9);
+  --numberColor: rgba(255, 255, 255, 0.9);
+}
+```
+**Descriptions des propriétés :**
+- `--orderBar` : Permet de choisir l'ordre entre la barre et les valeurs du compteur.
+    - Accepte uniquement `column` ou `column-reverse`.
+- `--curseEmoji` : Emoji utilisé pour comptabiliser les malédictions.
+- `--blessEmoji` : Emoji utilisé pour comptabiliser les bénédictions.
+- `--curseBarColor` : Couleur de la barre des malédictions.
+- `--blessBarColor` : Couleur de la barre des bénédictions.
+- `--numberColor` : Couleur des valeurs affichées.
+
 ## Comment mettre à jour l'application ?
 
 Téléchargez les sources de la
