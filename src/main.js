@@ -3,33 +3,42 @@ const redemption = {
   bless: 0,
   total: 0,
   broadcast: new BroadcastChannel('redemption'),
+  element: {
+    divRedemption: () => document.querySelector("#redemption"),
+    curseCounter: () => document.querySelector("#curseCounter"),
+    blessCounter: () => document.querySelector("#blessCounter"),
+    curseBar: () => document.querySelector(".progressBar").firstElementChild,
+    blessBar: () => document.querySelector(".progressBar").lastElementChild,
+  },
   addCurse: () => {
     redemption.curse++;
     redemption.total++;
-    document.getElementById("curseCounter").innerHTML = `<span>${redemption.curse}</span>`;
+    redemption.element.curseCounter().innerHTML = `<span>${redemption.curse}</span>`;
     redemption.updatePoints();
   },
   addBless: () => {
     redemption.bless++;
     redemption.total++;
-    document.getElementById("blessCounter").innerHTML = `<span>${redemption.bless}</span>`;
+    redemption.element.blessCounter().innerHTML = `<span>${redemption.bless}</span>`;
     redemption.updatePoints();
   },
   updatePoints: () => {
     const percentCurse = (redemption.curse / redemption.total) * 100;
     const percentBless = (redemption.bless / redemption.total) * 100;
-    document.querySelector(".progressBar").firstElementChild.style.width = percentCurse + "%";
-    document.querySelector(".progressBar").lastElementChild.style.width = percentBless + "%";
-    document.getElementById("redemption").classList.add("active");
+    redemption.element.curseBar().style.width = percentCurse + "%";
+    redemption.element.blessBar().style.width = percentBless + "%";
+    redemption.element.divRedemption().removeAttribute('hidden');
+    redemption.element.divRedemption().classList.add("active");
   },
   resetPoints: () => {
     redemption.curse = 0;
     redemption.bless = 0;
     redemption.total = 0;
-    document.getElementById("curseCounter").innerHTML = `<span>${redemption.curse}</span>`;
-    document.getElementById("blessCounter").innerHTML = `<span>${redemption.bless}</span>`;
-    document.querySelector(".progressBar").firstElementChild.style.width = "50%";
-    document.querySelector(".progressBar").lastElementChild.style.width = "50%";
+    redemption.element.divRedemption().classList.remove('active');
+    redemption.element.curseCounter().innerHTML = '';
+    redemption.element.blessCounter().innerHTML = '';
+    redemption.element.curseBar().style.width = "50%";
+    redemption.element.blessBar().style.width = "50%";
   }
 }
 
