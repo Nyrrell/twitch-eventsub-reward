@@ -1,6 +1,13 @@
-# TWITCH WEBSOCKET CUSTOM REWARD LISTENER
+# Twitch websocket (EventSub) custom reward listener
 
 ![exemple](media/compteur.gif)
+
+[![fr](https://img.shields.io/badge/lang-fr-red.svg)](README.md)
+[![en](https://img.shields.io/badge/lang-en-blue.svg)](README.en.md)
+> [!NOTE]
+> You can read a version of this README.md translated into English by ChatGPT.
+
+## Description
 
 Ce dépôt contient des exemples utilisant l'API et le websocket ([EventSub](https://dev.twitch.tv/docs/eventsub/)) de
 Twitch pour afficher un compteur entre deux
