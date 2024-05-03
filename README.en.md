@@ -75,17 +75,25 @@ and `BLESS_REWARD`.
 
 ![success](media/init-success.png)
 
-Update your `config.js` file with the configuration obtained in the previous step. Also, make sure to set the `INIT` parameter to `false` to indicate that this step has already been completed.
+Update your `config.js` file with the configuration obtained in the previous step. Also, make sure to set the `INIT`
+parameter to `false` to indicate that this step has already been completed.
 
-If not already done, add your local file `index.html` to OBS. This will allow the application to connect to Twitch's EventSub websocket and receive channel points rewards claimed by viewers.
+If not already done, add your local file `index.html` to OBS. This will allow the application to connect to Twitch's
+EventSub websocket and receive channel points rewards claimed by viewers.
 
-The application will update its `ACCESS_TOKEN` and `REFRESH_TOKEN` as needed and save them to the browser's local storage. This means that eventually, those entered in the `config.js` file won't be used by the application to authenticate with Twitch anymore.
+The application will update its `ACCESS_TOKEN` and `REFRESH_TOKEN` as needed and save them to the browser's local
+storage. This means that eventually, those entered in the `config.js` file won't be used by the application to
+authenticate with Twitch anymore.
 
->[!WARNING]
->After adding our application to OBS, it's best not to open the `index.html` file in another browser anymore. If you need to request a new token from Twitch using an expired `refresh_token`, Twitch will end the valid token, and you'll need to restart the initialization process.
+> [!WARNING]
+> After adding our application to OBS, it's best not to open the `index.html` file in another browser anymore. If you
+> need to request a new token from Twitch using an expired `refresh_token`, Twitch will end the valid token, and you'll
+> need to restart the initialization process.
 
-Don't worry if you perform a new initialization, the `DEVICE_CODE` will change. The application will know not to use the browser's storage and will again use the contents of the configuration file to update the local storage of the browser.
-Connection Indicator
+Don't worry if you perform a new initialization, the `DEVICE_CODE` will change. The application will know not to use the
+browser's storage and will again use the contents of the configuration file to update the local storage of the browser.
+
+## Connection Indicator
 
 When the application is connecting to Twitch, it displays 3 rapidly blinking dots to indicate this state:
 
@@ -95,20 +103,26 @@ If the application fails to connect, it displays 3 slowly blinking red dots:
 
 ![loading-error](media/loading-error.gif)
 
-For more information about why this failed, in the `config.js` file, set the `debug` parameter to `true` and reload the page.
+For more information about why this failed, in the `config.js` file, set the `debug` parameter to `true` and reload the
+page.
 
 ## How to Reset the Counter?
 
-To reset the counter to zero, the first option is to refresh the `index.html` web page in OBS. The downside of this method is that you will be disconnected from the websocket and the application will need to establish a new connection to the Twitch server.
+To reset the counter to zero, the first option is to refresh the `index.html` web page in OBS. The downside of this
+method is that you will be disconnected from the websocket and the application will need to establish a new connection
+to the Twitch server.
 
-The second option is to add a second browser source in OBS and choose the `trigger-reset.html` file. This source doesn't display anything, we will only use the refreshing of this page to send a message to our counter, indicating that it should reset to zero.
+The second option is to add a second browser source in OBS and choose the `trigger-reset.html` file. This source doesn't
+display anything, we will only use the refreshing of this page to send a message to our counter, indicating that it
+should reset to zero.
 The major advantage of this solution is that it keeps our websocket session open and listening.
 
 In the properties of the browser source of the `trigger-reset.html` file, check this box:
 
 ![obs-desac-source](media/obs/desac-source.png)
 
-Then, in the OBS settings, in the Keyboard Shortcuts tab, add the `keyboard shortcut` of your choice to show and hide the browser source, or use your Stream Deck if you have one.
+Then, in the OBS settings, in the Keyboard Shortcuts tab, add the `keyboard shortcut` of your choice to show and hide
+the browser source, or use your Stream Deck if you have one.
 
 ![obs-shortcut-source](media/obs/shortcut-source.png)
 
@@ -116,7 +130,9 @@ The source containing the `trigger-reset.html` page will reset the counter to ze
 
 ## Customization of Style in OBS
 
-It's possible to customize the style of our reward counter by modifying the values of existing variables. In OBS, in the properties of the browser source for our `index.html` file, you can add the following CSS to the `Custom CSS` section, in addition to the existing CSS:
+It's possible to customize the style of our reward counter by modifying the values of existing variables. In OBS, in the
+properties of the browser source for our `index.html` file, you can add the following CSS to the `Custom CSS` section,
+in addition to the existing CSS:
 
 ```css
 :root {
@@ -130,8 +146,9 @@ It's possible to customize the style of our reward counter by modifying the valu
 ```
 
 **Description of Properties:**
-- `--orderBar`: Allows you to choose the order between the bar and the counter values. 
-  - Only accepts `column` or `column-reverse`.
+
+- `--orderBar`: Allows you to choose the order between the bar and the counter values.
+    - Only accepts `column` or `column-reverse`.
 - `--curseEmoji`: Emoji used to count curses.
 - `--blessEmoji`: Emoji used to count blessings.
 - `--curseBarColor`: Color of the curses bar.
@@ -140,6 +157,7 @@ It's possible to customize the style of our reward counter by modifying the valu
 
 ## How to Update the Application?
 
-Download the sources of the latest [Release](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest) available.
+Download the sources of the latest [Release](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
+available.
 Replace the content of the `src` folder with what you just downloaded.
 It's not necessary to overwrite the `config.js` file unless specified in the release notes.
