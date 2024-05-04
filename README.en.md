@@ -108,7 +108,7 @@ page.
 
 ## How to Reset the Counter?
 
-![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.2&label=Minimum%20Release%20Version)
+[![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.2&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
 
 To reset the counter to zero, the first option is to refresh the `index.html` web page in OBS. The downside of this
 method is that you will be disconnected from the websocket and the application will need to establish a new connection
@@ -132,7 +132,7 @@ The source containing the `trigger-reset.html` page will reset the counter to ze
 
 ## Customization of Style in OBS
 
-![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.3&label=Minimum%20Release%20Version)
+[![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.3&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
 
 It's possible to customize the style of our reward counter by modifying the values of existing variables. In OBS, in the
 properties of the browser source for our `index.html` file, you can add the following CSS to the `Custom CSS` section,

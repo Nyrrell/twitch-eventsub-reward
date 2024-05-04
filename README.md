@@ -123,7 +123,7 @@ Pour obtenir plus d'informations sur la raison de cet échec, dans le fichier `c
 
 ## Comment réinitialiser le compteur ?
 
-![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.2&label=Minimum%20Release%20Version)
+[![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.2&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
 
 Pour remettre le compteur à zéro, la première possibilité est d'actualiser la page web `index.html` dans OBS. L'inconvénient de cette
 méthode est que vous serez déconnecté du websocket et il faudra que l'application établisse une nouvelle connexion au
@@ -147,7 +147,7 @@ La source contenant la page `trigger-reset.html` permettra de remettre le compte
 
 ## Customisation du style dans OBS
 
-![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.3&label=Minimum%20Release%20Version)
+[![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.3&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
 
 Il est possible de personnaliser le style de notre compteur de récompenses en modifiant les valeurs des variables existantes. Dans OBS, dans les propriétés de la source du navigateur pour notre fichier `index.html`, vous pouvez ajouter le CSS suivant à la section `CSS personnalisé` en plus du CSS déjà présent :
 
