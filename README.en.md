@@ -159,6 +159,37 @@ in addition to the existing CSS:
 - `--blessBarColor`: Color of the blessings bar.
 - `--numberColor`: Color of the displayed values.
 
+**Using an image instead of an emoji:**
+
+[![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.4&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
+
+You can use the following variables to define the URLs of the images:
+
+- `--curseImg`: URL of the image to use for the curse
+- `--blessImg`: URL of the image to use for the blessing  
+*Preferably use a square image format.*
+
+```css
+:root {
+  --curseEmoji: '';
+  --curseImg: url(https://cdn.7tv.app/emote/61016e3944c2247493275743/2x.webp);
+  --blessEmoji: '';
+  --blessImg: url(https://cdn.7tv.app/emote/638d063a8956540635ca4918/2x.webp);
+}
+```
+
+Replace default emojis with an empty value `''` to hide their content and add the variables `--curseImg`
+and `--blessImg` to be able to define the URL of the images to use.
+
+Possible URL types:
+
+- **Relative**: the image is in the `src` folder of the application
+    - `url(blueGuy.png)`
+- **Absolute**: the image is in the `images` folder of your PC
+    - `url(C:\Users\<CurrentUserName>\Pictures\blueGuy.png)`
+- **Web**: the image is a web link
+    - `url(https://cdn.7tv.app/emote/61016e3944c2247493275743/2x.webp)`
+
 ## How to Update the Application?
 
 Download the sources of the latest [Release](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)

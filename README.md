@@ -2,12 +2,13 @@
 
 ![exemple](media/compteur.gif)
 
-[![fr](https://img.shields.io/badge/lang-fr-red.svg)](README.md)
-[![en](https://img.shields.io/badge/lang-en-blue.svg)](README.en.md)
+## Description
+
 > [!NOTE]
 > You can read a version of this README translated into English by ChatGPT.
 
-## Description
+[![fr](https://img.shields.io/badge/lang-fr-red.svg)](README.md)
+[![en](https://img.shields.io/badge/lang-en-blue.svg)](README.en.md)
 
 Ce dépôt contient des exemples utilisant l'API et le websocket ([EventSub](https://dev.twitch.tv/docs/eventsub/)) de
 Twitch pour afficher un compteur entre deux
@@ -125,9 +126,9 @@ Pour obtenir plus d'informations sur la raison de cet échec, dans le fichier `c
 
 [![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.2&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
 
-Pour remettre le compteur à zéro, la première possibilité est d'actualiser la page web `index.html` dans OBS. L'inconvénient de cette
-méthode est que vous serez déconnecté du websocket et il faudra que l'application établisse une nouvelle connexion au
-serveur Twitch.
+Pour remettre le compteur à zéro, la première possibilité est d'actualiser la page web `index.html` dans OBS.
+L'inconvénient de cette méthode est que vous serez déconnecté du websocket et il faudra que l'application établisse une
+nouvelle connexion au serveur Twitch.
 
 La deuxième possibilité est d'ajouter dans OBS une seconde source de navigateur et de choisir le
 fichier `trigger-reset.html`. Cette source n'a rien à afficher, on va seulement se servir du rafraîchissement de cette
@@ -143,25 +144,30 @@ afficher et cacher la source de votre navigateur, ou utilisez votre Stream Deck 
 
 ![obs-shortcut-source](media/obs/shortcut-source.png)
 
-La source contenant la page `trigger-reset.html` permettra de remettre le compteur à zéro dès que vous la masquerez ou l'afficherez.
+La source contenant la page `trigger-reset.html` permettra de remettre le compteur à zéro dès que vous la masquerez ou
+l'afficherez.
 
 ## Customisation du style dans OBS
 
 [![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.3&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
 
-Il est possible de personnaliser le style de notre compteur de récompenses en modifiant les valeurs des variables existantes. Dans OBS, dans les propriétés de la source du navigateur pour notre fichier `index.html`, vous pouvez ajouter le CSS suivant à la section `CSS personnalisé` en plus du CSS déjà présent :
+Il est possible de personnaliser le style de notre compteur de récompenses en modifiant les valeurs des variables
+existantes. Dans OBS, dans les propriétés de la source du navigateur pour notre fichier `index.html`, vous pouvez
+ajouter le CSS suivant à la section `CSS personnalisé` en plus du CSS déjà présent :
 
 ```css
 :root {
   --orderBar: column;
   --curseEmoji: '💀';
   --blessEmoji: '🙏';
-  --curseBarColor: rgba(0, 63, 92, 0.9);
-  --blessBarColor: rgba(255, 166, 0, 0.9);
-  --numberColor: rgba(255, 255, 255, 0.9);
+  --curseBarColor: rgba(0, 63, 92, 0.8);
+  --blessBarColor: rgba(255, 166, 0, 0.8);
+  --numberColor: rgba(255, 255, 255, 0.8);
 }
 ```
+
 **Descriptions des propriétés :**
+
 - `--orderBar` : Permet de choisir l'ordre entre la barre et les valeurs du compteur.
     - Accepte uniquement `column` ou `column-reverse`.
 - `--curseEmoji` : Emoji utilisé pour comptabiliser les malédictions.
@@ -169,6 +175,38 @@ Il est possible de personnaliser le style de notre compteur de récompenses en m
 - `--curseBarColor` : Couleur de la barre des malédictions.
 - `--blessBarColor` : Couleur de la barre des bénédictions.
 - `--numberColor` : Couleur des valeurs affichées.
+
+**Utiliser une image à la place d'un emoji :**
+
+[![GitHub Release](https://img.shields.io/github/v/release/Nyrrell/twitch-eventsub-reward?filter=1.0.4&label=Minimum%20Release%20Version)](https://github.com/Nyrrell/twitch-eventsub-reward/releases/latest)
+
+Vous pouvez utiliser les variables suivantes pour définir les URLs des images :
+
+- `--curseImg`: URL de l'image à utiliser pour la malédiction
+- `--blessImg`: URL de l'image à utiliser pour la bénédiction  
+*Utiliser de préférence un format d'image carré.*
+
+
+```css
+:root {
+  --curseEmoji: '';
+  --curseImg: url(https://cdn.7tv.app/emote/61016e3944c2247493275743/2x.webp);
+  --blessEmoji: '';
+  --blessImg: url(https://cdn.7tv.app/emote/638d063a8956540635ca4918/2x.webp);
+}
+```
+
+Remplacer les emojis par défaut par une valeur vide `''` pour masquer leur contenu et ajouter les variables `--curseImg`
+et `--blessImg` pour pouvoir définir l'url des images à utiliser.
+
+Type d'URL possible :
+
+- **Relatif** : l'image est dans le dossier `src` de l'application
+    - `url(blueGuy.png)`
+- **Absolu** : l'image est dans le dossier `images` de votre pc
+    - `url(C:\Users\<CurrentUserName>\Pictures\blueGuy.png)`
+- **Web** : l'image est un lien web
+    - `url(https://cdn.7tv.app/emote/61016e3944c2247493275743/2x.webp)`
 
 ## Comment mettre à jour l'application ?
 
