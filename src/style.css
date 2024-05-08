@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
 :root {
   --orderBar: column;
   --curseEmoji: '💀';
   --blessEmoji: '🙏';
+  --curseImg: ;
+  --blessImg: ;
   --curseBarColor: rgba(0, 63, 92, 0.9);
   --blessBarColor: rgba(255, 166, 0, 0.9);
   --numberColor: rgba(255, 255, 255, 0.9);
@@ -29,19 +33,22 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 1em;
-  height: 3em;
+  height: 3rem;
 }
 
 .number {
+  display: flex;
   color: var(--numberColor);
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
-  font-size: 2rem;
+  font-family: "Oswald", sans-serif;
+  font-size: 2.2rem;
   font-weight: bold;
   user-select: none;
 }
 
 .number > span {
   animation: fade 1s forwards;
+  align-self: center;
 }
 
 @keyframes fade {
@@ -55,17 +62,24 @@ body {
 
 .counterContainer div:before,
 .counterContainer div:after {
-  padding: 0 12px;
-  transform: scale(0.8);
+  margin: 0 12px;
+  transform: scale(0.9);
   display: inline-block;
+  text-align: center;
+  background: center no-repeat;
+  background-size: cover;
+  width: 48px;
+  height: 48px;
 }
 
 #curseCounter:not(:empty):before {
   content: var(--curseEmoji);
+  background-image: var(--curseImg);
 }
 
 #blessCounter:not(:empty):after {
   content: var(--blessEmoji);
+  background-image: var(--blessImg);
 }
 
 .progressBar {
